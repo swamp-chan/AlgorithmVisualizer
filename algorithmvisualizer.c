@@ -14,13 +14,9 @@ typedef struct Bar{
     Color color;
 }Bar;
 
-//this
-typedef enum {None, Bubble, Selection, Insertion, Quick, Exit} SAlgorithm;
-char AlgorithmNames[][10] = {"NONE","BUBBLE", "SELECTION", "INSERTION", "QUICKSORT"};
-SAlgorithm currentsort = None;
-
 //variables
 Bar bar[nobar];
+char AlgorithmNames[][10] = {"NONE","BUBBLE", "SELECTION", "INSERTION", "QUICKSORT"};
 
 //functions
 void Barsetup(){
@@ -105,6 +101,99 @@ void SelectionSort(){
    }
 }
 
+void InsertionSort(){
+    static int i = 1, j = 0, k = 0;
+    static bool placing = false;
+    
+    if(i<nobar){
+        if(!placing){
+            k = bar[i].height;
+            j = i-1;
+            placing = true;
+        }
+        if(j>=0 && bar[j].height > k){
+            bar[j+1].height = bar[j].height;
+            bar[j].color = RED;
+            bar[j+1].color = BLUE;
+            DrawBars();
+            
+            bar[j].color = WHITE;   
+            bar[j+1].color = WHITE;
+            j--;
+        }else{
+            bar[j+1].height = k;
+            i++;
+            placing = false;
+        }
+    }
+    else{
+        SigmaGreenBars();
+        DrawBars();
+    }
+}
+
+void QuickSort(){
+    static int stack[nobar];
+    static int top = -1;
+    static bool initialized = false;
+    
+    if(!initialized){
+        stack[++top] = 0;
+        stack[++top] = nobar-1;
+        initialized = true;
+    }
+    
+    if(top>=0){
+        int end = stack[top--];
+        int start = stack[top--];
+        int pivot = bar[end].height;
+        int i = start -1;
+        
+        bar[end].color = BLUE;
+        DrawBars();
+        
+        for(int j = start; j<end;j++){
+            bar[j].color = RED;
+            DrawBars();
+            
+            if(bar[j].height<pivot){
+                i++;
+                
+                int temp = bar[i].height;
+                bar[i].height = bar[j].height;
+                bar[j].height = temp;
+            }
+            bar[j].color = WHITE;
+            DrawBars();
+        }
+        
+        int temp = bar[i+1].height;
+        bar[i+1].height = bar[end].height;
+        bar[end].height = temp;
+        
+        bar[end].color = WHITE;
+        DrawBars();
+        int pivotIndex = i+1;
+        if(pivotIndex - 1>start){
+            stack[++top] = start;
+            stack[++top] = pivotIndex-1;
+            
+        }
+        if(pivotIndex + 1<end){
+            stack[++top]= pivotIndex + 1;
+            stack[++top] = end;
+        }
+    }
+    else{
+        SigmaGreenBars();
+        DrawBars();
+    }
+}
+
+//this
+typedef enum {None, Bubble, Selection, Insertion, Quick, Exit} SAlgorithm;
+SAlgorithm currentsort = None;
+
 //Main menu (basically)
 void BarUpdateAlgorithm(){
     if(IsKeyPressed(KEY_ONE)){
@@ -144,9 +233,9 @@ int main(){
         }else if(currentsort == Selection){
             SelectionSort();
         }else if(currentsort == Insertion){
-            //InsertionSort();
+            InsertionSort();
         }else if(currentsort == Quick){
-            //QuickSort();
+            QuickSort();
         }else if(currentsort == Exit){
             break;
         }
