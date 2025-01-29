@@ -1,39 +1,37 @@
 #include "raylib.h"
-#include <stdlib.h>
 #include <time.h>
 
 #define Wwidth 1000
 #define Wheight 700
 #define nobar 50
 #define fontsize 55
+#define bgcolor BLACK
+#define barcolor WHITE
 
 //this
 //typedef
-typedef struct Bar{
+struct Bar{
     int height;
     Color color;
-}Bar;
+};
 
 //variables
-Bar bar[nobar];
+struct Bar bar[nobar];
 char AlgorithmNames[][10] = {"NONE","BUBBLE", "SELECTION", "INSERTION", "QUICKSORT"};
+
+
 
 //functions
 void Barsetup(){
     for(int i = 0; i<nobar; i++){
         bar[i].height = GetRandomValue(10,Wheight-50);
-        bar[i].color = WHITE;
+        bar[i].color = barcolor;
     }
 }
 
 void DrawBars(){
     for(int i = 0; i<nobar; i++){
-        DrawRectangle(i*(Wwidth/nobar),
-        Wheight - bar[i].height,
-        Wwidth/nobar - 2,
-        bar[i].height,
-        bar[i].color
-        );
+        DrawRectangle(i*(Wwidth/nobar), Wheight - bar[i].height, Wwidth/nobar - 2, bar[i].height, bar[i].color);
     }
 }
 void SigmaGreenBars(){
@@ -55,8 +53,8 @@ void BubbleSort(){
                 bar[j].height = bar[j+1].height;
                 bar[j+1].height = th;
             }
-            bar[j].color = WHITE;
-            bar[j+1].color = WHITE;
+            bar[j].color = barcolor;
+            bar[j+1].color = barcolor;
             j++;
             DrawBars();
         }else{
@@ -216,12 +214,13 @@ void BarUpdateAlgorithm(){
         DrawText("3. INSERTION SORT",Wwidth/15,Wheight/5 + 200,fontsize/2,WHITE);
         DrawText("4. QUICK SORT",Wwidth/15,Wheight/5 + 250,fontsize/2,WHITE);
         DrawText("ESC TO EXIT",(Wwidth/2)-fontsize*2,Wheight/5 + 400,fontsize/2,DARKGRAY);
+        DrawText("BACKSPACE TO RETURN TO MENU",(Wwidth/5)+fontsize,Wheight/5 + 450,fontsize/2,DARKGRAY);
     }
 }
 
 //main
 int main(){
-    InitWindow(Wwidth,Wheight,"Algorithm Visualizer");
+    InitWindow(Wwidth,Wheight,"sigma window");
     SetTargetFPS(60);
     
     SetRandomSeed(time(NULL)); //this (seed random number generator)
@@ -246,10 +245,10 @@ int main(){
             BarUpdateAlgorithm();
         }
         if(currentsort != None){
-            DrawText(AlgorithmNames[currentsort],10,10,20,WHITE);
+            DrawText(AlgorithmNames[currentsort],10,30,20,WHITE);
         }
         BeginDrawing();
-        ClearBackground(BLACK);
+        ClearBackground(bgcolor);
         EndDrawing();
   
     }
