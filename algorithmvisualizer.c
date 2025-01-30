@@ -1,6 +1,7 @@
 #include "raylib.h"
 #include <time.h>
 
+
 #define Wwidth 1000
 #define Wheight 700
 #define nobar 50
@@ -8,20 +9,30 @@
 #define bgcolor BLACK
 #define barcolor WHITE
 
-//this
-//typedef
+//this can be basically understood as defining 'Bar' datatype with height and color
+//'struct' is used to make a 'user defined data type', it groups different variables of different data types
 struct Bar{
     int height;
     Color color;
 };
 
-//variables
+//variables that will be used in the program
 struct Bar bar[nobar];
+//from the Bar struct i previously defined i made a new variable with the 'Bar' datatype and array data structure
+/*now with this i can something like:
+  bar[0].height = Wheight/2;
+  bar[0].color = WHITE;
+  essentially creating a rectangular bar with height half of the windows height and white in color
+  then bar[0] can later be rendered using DrawRectangle function of raylib
+*/
+
+//array of characters that will be printed later
 char AlgorithmNames[][10] = {"NONE","BUBBLE", "SELECTION", "INSERTION", "QUICKSORT"};
 
 
 
 //functions
+/* in the function Barsetup*/
 void Barsetup(){
     for(int i = 0; i<nobar; i++){
         bar[i].height = GetRandomValue(10,Wheight-50);
@@ -43,7 +54,7 @@ void SigmaGreenBars(){
 //the actual algorithms
 void BubbleSort(){
     static int i = 0, j = 0;
-    if(i<nobar){
+    if(i<nobar-1){
         if(j<nobar-i-1){
             bar[j].color = RED;
             bar[j+1].color = RED;
@@ -74,20 +85,19 @@ void SelectionSort(){
         bar[mindex].color = BLUE;
         bar[j].color = RED;
         DrawBars();
-       
         if(bar[j].height<bar[mindex].height){
-           bar[mindex].color = WHITE;
+           bar[mindex].color = barcolor;
            mindex = j;
         }
-        bar[j].color = WHITE;
+        bar[j].color = barcolor;
         j++;
         DrawBars();
        }else{
         int temp = bar[i].height;
         bar[i].height = bar[mindex].height;
         bar[mindex].height = temp;
-        bar[mindex].color = WHITE;
-        bar[i].color = WHITE;
+        bar[mindex].color = barcolor;
+        bar[i].color = barcolor;
        
        i++;
        j = i+1;
